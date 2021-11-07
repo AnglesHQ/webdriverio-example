@@ -48,10 +48,11 @@ const config: WebdriverIO.Config = {
             // And you can then point it to your instance of the Angles dashboard.
             anglesReporter.setBaseUrl(BuildParameters.anglesURL);
             const build = await anglesReporter.startBuild(
-                BuildParameters.anglesBuildName,
-                BuildParameters.anglesTeam,
-                BuildParameters.anglesEnvironment,
-                BuildParameters.anglesComponent,
+              BuildParameters.anglesBuildName,
+              BuildParameters.anglesTeam,
+              BuildParameters.anglesEnvironment,
+              BuildParameters.anglesComponent,
+              BuildParameters.anglesPhase,
             );
             const artifact = new Artifact('angles-ui', 'anglesHQ', '1.0.0');
             const artifactArray: Artifact[] = [];
@@ -101,8 +102,9 @@ const config: WebdriverIO.Config = {
      * @param {String} commandName hook command name
      * @param {Array} args arguments that command would receive
      */
-    // beforeCommand: function (commandName, args) {
-    // },
+    beforeCommand: function (commandName, args) {
+        console.log(`Command ${commandName} ${args}`);
+    },
     /**
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
@@ -143,6 +145,8 @@ const config: WebdriverIO.Config = {
     afterTest: async function(test, context, { error, result, duration, passed, retries }) {
         if (error) {
             Reporter.fail(`Test ${test.title} has failed`, 'Test Passed', 'Test Failed', `Error: ${error}`);
+        } else {
+            Reporter.pass(`Test ${test.title} has passed`, 'Test Passed', 'Test Failed', '');
         }
         if (BuildParameters.isAnglesEnabled && process.env.ANGLES_ID) {
             await anglesReporter.saveTest();

@@ -1,7 +1,23 @@
-import {Artifact} from "angles-javascript-client/dist/lib/models/Artifact";
 import {BuildParameters} from "./test/utils/BuildParameters";
-import anglesReporter from 'angles-javascript-client';
-import {Reporter} from "./test/utils/Reporter";
+import AnglesWDIOReporter from "./test/utils/AnglesWDIOReporter";
+
+/**
+ * The below configurations will tell angles how to report the results.
+ * If you would like to add your own artifacts you will have to grab them yourself from
+ * e.g. an API of UI and then add them here (this will be different for each system).
+ */
+const anglesConfig: any = {
+    enabled: BuildParameters.isAnglesEnabled,
+    baseUrl: BuildParameters.anglesURL,
+    reportingUrl: BuildParameters.anglesReportingURL,
+    team: BuildParameters.anglesTeam,
+    environment: BuildParameters.anglesEnvironment,
+    component: BuildParameters.anglesComponent,
+    phase: BuildParameters.anglesPhase,
+    artifacts: [
+        { groupId: 'anglesHQ', artifactId: 'angles-ui', version: '1.0.0' }
+    ]
+}
 
 const config: WebdriverIO.Config = {
     specs: [
@@ -10,6 +26,9 @@ const config: WebdriverIO.Config = {
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
+    ],
+    reporters: [
+        [AnglesWDIOReporter, anglesConfig]
     ],
     maxInstances: 10,
     capabilities: [{
@@ -25,7 +44,6 @@ const config: WebdriverIO.Config = {
     connectionRetryCount: 3,
     services: ['chromedriver'],
     framework: 'mocha',
-    reporters: ['spec'],
     mochaOpts: {
         ui: 'bdd',
         timeout: 60000
@@ -43,26 +61,8 @@ const config: WebdriverIO.Config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onPrepare: async function (config, capabilities) {
-        if (BuildParameters.isAnglesEnabled) {
-            // And you can then point it to your instance of the Angles dashboard.
-            anglesReporter.setBaseUrl(BuildParameters.anglesURL);
-            const build = await anglesReporter.startBuild(
-              BuildParameters.anglesBuildName,
-              BuildParameters.anglesTeam,
-              BuildParameters.anglesEnvironment,
-              BuildParameters.anglesComponent,
-              BuildParameters.anglesPhase,
-            );
-            const artifact = new Artifact('angles-ui', 'anglesHQ', '1.0.0');
-            const artifactArray: Artifact[] = [];
-            artifactArray.push(artifact);
-            await anglesReporter.addArtifacts(artifactArray);
-            // store the build id
-            process.env.ANGLES_ID = build._id;
-            console.log(`Created build with id ${process.env.ANGLES_ID} in Angles`)
-        }
-    },
+    // onPrepare: async function (config, capabilities) {
+    // },
     /**
      * Gets executed before a worker process is spawned and can be used to initialise specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -82,12 +82,8 @@ const config: WebdriverIO.Config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {String} cid worker id (e.g. 0-0)
      */
-    beforeSession: async function (config, capabilities, specs, cid) {
-        if (BuildParameters.isAnglesEnabled && process.env.ANGLES_ID) {
-            anglesReporter.setBaseUrl(BuildParameters.anglesURL);
-            await anglesReporter.setCurrentBuild(process.env.ANGLES_ID);
-        }
-    },
+    // beforeSession: async function (config, capabilities, specs, cid) {
+    // },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -102,9 +98,8 @@ const config: WebdriverIO.Config = {
      * @param {String} commandName hook command name
      * @param {Array} args arguments that command would receive
      */
-    beforeCommand: function (commandName, args) {
-        console.log(`Command ${commandName} ${args}`);
-    },
+    // beforeCommand: function (commandName, args) {
+    // },
     /**
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
@@ -114,12 +109,8 @@ const config: WebdriverIO.Config = {
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
-    beforeTest: function (test, context) {
-        if (BuildParameters.isAnglesEnabled && process.env.ANGLES_ID) {
-            anglesReporter.startTest(test.title, test.parent);
-        }
-        console.log(`##### Starting test ${test.title} #####`);
-    },
+    // beforeTest: function (test, context) {
+    // },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
      * beforeEach in Mocha)
@@ -142,17 +133,8 @@ const config: WebdriverIO.Config = {
      * @param {Boolean} result.passed    true if test has passed, otherwise false
      * @param {Object}  result.retries   informations to spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    afterTest: async function(test, context, { error, result, duration, passed, retries }) {
-        if (error) {
-            Reporter.fail(`Test ${test.title} has failed`, 'Test Passed', 'Test Failed', `Error: ${error}`);
-        } else {
-            Reporter.pass(`Test ${test.title} has passed`, 'Test Passed', 'Test Failed', '');
-        }
-        if (BuildParameters.isAnglesEnabled && process.env.ANGLES_ID) {
-            await anglesReporter.saveTest();
-        }
-    },
-
+    // afterTest: async function(test, context, { error, result, duration, passed, retries }) {
+    // },
 
     /**
      * Hook that gets executed after the suite has ended
@@ -176,11 +158,8 @@ const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    after: function (result, capabilities, specs) {
-        if (BuildParameters.isAnglesEnabled && process.env.ANGLES_ID) {
-            console.info(`Angles Dashboard Results: ${BuildParameters.anglesReportingURL}/build/?buildId=${process.env.ANGLES_ID}`)
-        }
-    },
+    // after: function (result, capabilities, specs) {
+    // },
     /**
      * Gets executed right after terminating the webdriver session.
      * @param {Object} config wdio configuration object
@@ -197,9 +176,8 @@ const config: WebdriverIO.Config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    onComplete: function(exitCode, config, capabilities, results) {
-        process.env.ANGLES_ID = undefined;
-    },
+    // onComplete: function(exitCode, config, capabilities, results) {
+    // },
     /**
     * Gets executed when a refresh happens.
     * @param {String} oldSessionId session ID of the old session

@@ -7,7 +7,7 @@
         "wdio": "wdio run wdio.conf.js"
     },
     "dependencies": {
-        "angles-javascript-client": "^1.0.12",
+        "angles-javascript-client": "^1.0.14",
         "moment": "^2.29.1",
         "uuid": "^8.3.2",
         "wdio": "^6.0.0",

@@ -4,19 +4,13 @@ import {ScreenshotRequest} from "../utils/ScreenshotRequest";
 
 describe('Navigate to Angles', () => {
 
-    it('should see banner', async () => {
+    it('Github page screenshot should match baseline', async () => {
         await GithubPage.open();
-        Reporter.info('Waiting to see banner')
         await expect(GithubPage.githubLink).toBeExisting();
         let request = new ScreenshotRequest('view_1', ['wdio', 'chrome']);
-        await Reporter.takeScreenshot(request);
-    });
-
-    it('should see banner 2', async () => {
-        Reporter.info('Waiting to see banner')
-        await expect(GithubPage.githubLink).toBeExisting();
-        let request = new ScreenshotRequest('view_1', ['wdio', 'chrome']);
-        await Reporter.takeScreenshot(request);
+        const screenshot = await Reporter.takeScreenshot(request);
+        // expect no more than 1% difference (can be set to 0.01 for more accuracy).
+        await Reporter.compareScreenshotAgainstBaseline(screenshot._id, 1.0);
     });
 });
 

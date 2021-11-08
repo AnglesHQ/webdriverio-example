@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "lib": ["esnext", "dom"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": false,
+    "baseUrl": ".",
+    "sourceMap": true,
+    "declaration": true,
+    "types": [
+      "webdriverio/sync",
+      "node",
+      "mocha",
+      "@wdio/cucumber-framework",
+      "@wdio/selenium-standalone-service",
+      "expect-webdriverio" // THIS line needed to be added
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "**/*.test.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

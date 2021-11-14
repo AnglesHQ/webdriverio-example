@@ -9,15 +9,21 @@ This repository contains an example of an implementation of how to integrate wit
 To run this example test you will need:
 1. A local instance of Angles running 
    * see our [github page](https://angleshq.github.io/) for documentation on how to setup your own instance
-2. Created the following using the [API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/AnglesHQ/angles/master/swagger/swagger.json):
+2. Created the following configurations using the [API](https://editor.swagger.io/?url=https://raw.githubusercontent.com/AnglesHQ/angles/master/swagger/swagger.json):
     * Team
     * Component
     * Environment
     * Phase (This is optional, but very useful for reporting. Examples would be *smoke*, *verification*, *regression*)
 
-for the example below you would need to create a **team** *'angles'*, a **component** *'wdio-example'* and an **environment** *'qa'*. However, you can use your own values and simply change the config to match your values.
+for the example below you would need to create:
+   - a **team** *'angles'*, 
+   - a **component** *'wdio-example'*
+   - an **environment** *'qa'*
+   - **Optional**: a **phase** *'crossbrowser'* 
+     
+However, you can use your own values and simply change the config to match your values.
 
-### Setup/modify the wdio tests
+### Set up the WebdriverIO tests
 
 Once you have your own instance running (and have added the necessary config), you can now modify your wdio tests to report into your Angles instance by adding a dependency to the [angles-javascript-client](https://github.com/AnglesHQ/angles-javascript-client):
 ```shell

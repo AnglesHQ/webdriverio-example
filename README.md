@@ -27,9 +27,9 @@ However, you can use your own values and simply change the config to match your 
 
 Once you have your own instance running (and have added the necessary config), you can now modify your wdio tests to report into your Angles instance by adding a dependency to the [angles-javascript-client](https://github.com/AnglesHQ/angles-javascript-client):
 ```shell
-npm install angles-javascript-client --save-dev
+npm install angles-wdio-reporter --save-dev
 ```
-Once the angles js client has been added as a dependency you can include the following custom reporter config into your [wdio.conf.ts](wdio.conf.ts) file.
+Once the angles wdio reporter has been added as a dependency you can include the following custom reporter config into your [wdio.conf.ts](wdio.conf.ts) file.
 
 below is an example of the available config.
 ```

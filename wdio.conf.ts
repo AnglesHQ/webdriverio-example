@@ -1,5 +1,5 @@
 import {BuildParameters} from "./test/utils/BuildParameters";
-import { AnglesWDIOReporter } from "angles-javascript-client";
+import {AnglesWDIOReporter} from "angles-wdio-reporter";
 
 /**
  * The below configurations will tell angles how to report the results.

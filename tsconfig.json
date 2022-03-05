@@ -16,12 +16,11 @@
     "sourceMap": true,
     "declaration": true,
     "types": [
-      "webdriverio/sync",
       "node",
-      "mocha",
-      "@wdio/cucumber-framework",
+      "webdriverio/async",
+      "@wdio/mocha-framework",
       "@wdio/selenium-standalone-service",
-      "expect-webdriverio" // THIS line needed to be added
+      "expect-webdriverio"
     ]
   },
   "include": [

@@ -1,5 +1,5 @@
 import {BuildParameters} from "./test/utils/BuildParameters";
-import {AnglesWDIOReporter} from "angles-wdio-reporter";
+import { AnglesWDIOReporter, AnglesWDIOService } from "angles-wdio-reporter";
 
 /**
  * The below configurations will tell angles how to report the results.
@@ -7,6 +7,7 @@ import {AnglesWDIOReporter} from "angles-wdio-reporter";
  * e.g. an API of UI and then add them here (this will be different for each system).
  */
 const anglesConfig: any = {
+    buildName: BuildParameters.anglesBuildName,
     enabled: BuildParameters.isAnglesEnabled,
     baseUrl: BuildParameters.anglesURL,
     reportingUrl: BuildParameters.anglesReportingURL,
@@ -42,7 +43,7 @@ const config: WebdriverIO.Config = {
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
-    services: ['chromedriver'],
+    services: ['chromedriver', [AnglesWDIOService, {}]],
     framework: 'mocha',
     mochaOpts: {
         ui: 'bdd',

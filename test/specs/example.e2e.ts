@@ -2,7 +2,7 @@ import GithubPage from '../pageobjects/github.page';
 import {Reporter} from "../utils/Reporter";
 import {ScreenshotRequest} from "../utils/ScreenshotRequest";
 
-describe('Navigate to Angles', () => {
+describe('Navigate to Angles', async () => {
 
     it('Github page screenshot should match baseline', async () => {
         await GithubPage.open();

@@ -51,7 +51,33 @@ export class Reporter {
         console.warn(`Fail: ${step}`);
     }
 
-    static async takeScreenshot(screenshotRequest: ScreenshotRequest): Promise<Screenshot> {
+    static async takeScreenshot() {
+        const timeStamp:string = moment(new Date()).format('YYYY-MM-DD_HH-mm-ss-SSS');
+        let fs = require('fs');
+        let dir = './build/screenshots/';
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        const screenshotPath: string = `./build/screenshots/screenshot_${timeStamp}.png`;
+        await browser.saveScreenshot(screenshotPath);
+
+        if (BuildParameters.isAnglesEnabled) {
+            let platform = new ScreenshotPlatform();
+            // @ts-ignore
+            const { platformName, platformVersion, browserName, browserVersion } = browser.capabilities;
+            platform.platformName = platformName;
+            if (platformVersion) {
+                platform.platformVersion = platformVersion;
+            }
+            platform.browserName = browserName;
+            platform.browserVersion = browserVersion;
+            const screenshot: Screenshot = await anglesReporter.saveScreenshotWithPlatform(screenshotPath, '', [], platform);
+            anglesReporter.infoWithScreenshot(`Took screenshot`, screenshot._id);
+            return screenshot;
+        }
+    }
+
+    static async takeScreenshotWithRequest(screenshotRequest: ScreenshotRequest): Promise<Screenshot> {
         const { view, tags } = screenshotRequest;
         const timeStamp:string = moment(new Date()).format('YYYY-MM-DD_HH-mm-ss-SSS');
         let fs = require('fs');
